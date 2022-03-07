@@ -1,7 +1,9 @@
-﻿using NAudio.Wave;
+﻿using Microsoft.Win32;
+using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -34,18 +37,45 @@ namespace STQCGenerator
                 deviceCombo.Items.Add(item);
             }
             deviceCombo.SelectedIndex = 0;
+            LoadSettings();
+        }
+
+        void SaveSettings() {
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\STQCGenerator");
+
+            key.SetValue("Format", formatBox.Text);
+            key.SetValue("Input", inputBox.Text);
+            key.Close();
+        }
+
+        void LoadSettings()
+        {
+            if (Registry.CurrentUser.OpenSubKey(@"SOFTWARE\STQCGenerator")==null)
+            {
+                Reset();
+                SaveSettings();
+                return;
+            }
+
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\STQCGenerator");
+
+            formatBox.Text = (string) key.GetValue("Format");
+            inputBox.Text = (string) key.GetValue("Input");
+            key.Close();
+
             Update();
         }
-        async Task PlayOutput(bool record)
+
+        async Task PlayOutput(bool record,string filename=null)
         {
             string sequence;
             try
             {
-                sequence = STQC.GenerateOutput(formatBox.Text, inputBox.Text)+"__";
+                sequence = STQC.GenerateOutput(formatBox.Text, inputBox.Text)+"_";
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                System.Windows.MessageBox.Show(e.Message);
                 return;
             }
             
@@ -54,7 +84,7 @@ namespace STQCGenerator
             var sound = new SineWaveProvider();
             sound.sequence = "_"+sequence+"_";
             float totallen = sound.TotalLength();
-            using (var recorder=new WaveRecorder(new SampleToWaveProvider( sound),record,"test.wav"))
+            using (var recorder=new WaveRecorder(new SampleToWaveProvider( sound),record,filename))
             {
                 using (var wo = new WaveOut() { DeviceNumber= deviceCombo.SelectedIndex -1})
                 {
@@ -105,7 +135,34 @@ namespace STQCGenerator
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
         {
-            PlayOutput(true);
+            System.Windows.Forms.SaveFileDialog saveFileDialog1 = new();
+            saveFileDialog1.FileName = $"stqc ({formatBox.Text.Replace(' ',',')}) {inputBox.Text.Replace(' ',',')}.wav";
+            saveFileDialog1.Filter = "Wav files (*.wav)|*.wav";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+
+            if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                PlayOutput(true, saveFileDialog1.FileName);
+            }
+        }
+
+        void Reset()
+        {
+            inputBox.Text = "123 1234";
+            formatBox.Text = "7 8";
+            SaveSettings();
+            Update();
+        }
+
+        private void Reset_click(object sender, RoutedEventArgs e)
+        {
+            Reset();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SaveSettings();
         }
     }
 }

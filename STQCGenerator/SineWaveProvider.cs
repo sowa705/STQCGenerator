@@ -69,7 +69,7 @@ namespace STQCGenerator
                 if (int.TryParse(sequence[index].ToString(), out freqid))
                 {
                     frequency = frequencies[freqid];
-                    Volume = 0.5f;
+                    Volume = 0.25f;
                 }
                 else
                 {

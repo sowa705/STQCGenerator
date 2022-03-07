@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:STQCGenerator"
         mc:Ignorable="d"
-        Title="STQC Generator" Height="450" Width="800">
+        Title="{x:Static local:Resources.ProgramTitle}" Height="450" Width="800" Closing="Window_Closing">
     <Grid>
         <Menu Height="20" VerticalAlignment="Top">
-            <MenuItem Header="About..." Click="AboutMenu_click"/>
+            <MenuItem Header="{x:Static local:Resources.ResetToDefaultMenu}" Click="Reset_click"/>
+            <MenuItem Header="{x:Static local:Resources.AboutMenu}" Click="AboutMenu_click"/>
         </Menu>
         <Grid Margin="8,16,8,8">
             <Grid Height="24
@@ -21,14 +22,14 @@
                     <ColumnDefinition Width="1*"></ColumnDefinition>
                     <ColumnDefinition Width="1*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Label VerticalAlignment="Top" Grid.Column="0" Content="Output device" />
+                <Label VerticalAlignment="Top" Grid.Column="0" Content="{x:Static local:Resources.OutputDeviceLabel}" />
                 <ComboBox x:Name="deviceCombo" Grid.Column="1"/>
-                <Label VerticalAlignment="Center" Grid.Column="2" Content="Format: "></Label>
+                <Label VerticalAlignment="Center" Grid.Column="2" Content="{x:Static local:Resources.FormatLabel}"></Label>
                 <TextBox x:Name="formatBox" VerticalContentAlignment="Center" Text="7 8" Grid.Column="3" TextChanged="formatChanged"></TextBox>
-                <Button x:Name="saveButton" Margin="8,0,0,0" Grid.Column="4" Content="Save audio" Click="saveButton_Click"/>
-                <Button x:Name="playButton" Margin="8,0,0,0" Grid.Column="5" Content="Play" Click="playButton_Click"/>
+                <Button x:Name="saveButton" Margin="8,0,0,0" Grid.Column="4" Content="{x:Static local:Resources.SaveAudioButton}" Click="saveButton_Click"/>
+                <Button x:Name="playButton" Margin="8,0,0,0" Grid.Column="5" Content="{x:Static local:Resources.PlayAudioButton}" Click="playButton_Click"/>
             </Grid>
-            <Label Content="STQC Generator" HorizontalAlignment="Left" Margin="0,4,0,0" VerticalAlignment="Top" FontWeight="Normal" FontSize="20" FontFamily="Segoe UI Semibold"/>
+            <Label Content="{x:Static local:Resources.ProgramTitle}" HorizontalAlignment="Left" Margin="0,4,0,0" VerticalAlignment="Top" FontWeight="Normal" FontSize="20" FontFamily="Segoe UI Semibold"/>
             <Grid Margin="0,32,0,28">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
@@ -36,9 +37,9 @@
                     <RowDefinition Height="auto"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Input"></Label>
+                <Label Grid.Row="0" Content="{x:Static local:Resources.InputLabel}"></Label>
                 <TextBox x:Name="inputBox" TextChanged="inputBox_TextChanged" Grid.Row="1" Text="123 2312"></TextBox>
-                <Label Grid.Row="2" Content="Output"></Label>
+                <Label Grid.Row="2" Content="{x:Static local:Resources.OutputLabel}"></Label>
                 <TextBox x:Name="outputBox" Grid.Row="3" Text="sdfdf" IsEnabled="False"/>
             </Grid>
 

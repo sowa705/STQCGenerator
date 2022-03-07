@@ -21,7 +21,7 @@ namespace STQCGenerator
                 }
                 else
                 {
-                    throw new Exception("Format parse error");
+                    throw new Exception( Resources.FormatParseError );
                 }
             }
             return l.ToArray();
@@ -46,7 +46,7 @@ namespace STQCGenerator
 
             if (split.Length != format.Length)
             {
-                throw new Exception("Input does not follow format!");
+                throw new Exception(Resources.InputFormatError);
             }
 
             string output = "";
@@ -65,7 +65,7 @@ namespace STQCGenerator
                 char[] base4 = unpadded.ToCharArray();
                 if (base4.Length > digitcount)
                 {
-                    throw new Exception($"Value over range at group {i+1}");
+                    throw new Exception($"{Resources.OverrangeError}{i+1}");
                 }
                 char last = '0';
                 for (int e = 0; e < base4.Length; e++)
